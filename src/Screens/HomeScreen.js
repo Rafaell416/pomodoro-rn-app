@@ -6,6 +6,8 @@ import {
 } from 'react-native'
 import Header from '../Components/Header'
 import TouchableIcon from '../Components/TouchableIcon'
+import Timer from '../Containers/Timer'
+import PlayPauseButton from '../Containers/PlayPauseButton'
 
 export default class HomeScreen extends Component {
   constructor(props){
@@ -37,6 +39,17 @@ export default class HomeScreen extends Component {
             />
           }
         />
+        <View style={[styles.flexView, styles.timerView]}>
+          <Timer />
+        </View>
+        <View style={[styles.flexView, styles.controlsView]}>
+          <View style={[styles.flexView, styles.playPauseButtonView]}>
+            <PlayPauseButton />
+          </View>
+          <View style={[styles.flexView, styles.resetButtonView]}>
+
+          </View>
+        </View>
       </View>
     )
   }
@@ -46,5 +59,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#e74c3c'
+  },
+  flexView: {
+    flex: 1,
+  },
+  timerView: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  playPauseButtonView: {
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  resetButtonView: {
+    backgroundColor: 'green'
   }
 })
