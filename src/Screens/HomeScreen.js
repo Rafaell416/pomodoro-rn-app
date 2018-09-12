@@ -8,6 +8,7 @@ import Header from '../Components/Header'
 import TouchableIcon from '../Components/TouchableIcon'
 import Timer from '../Containers/Timer'
 import PlayPauseButton from '../Containers/PlayPauseButton'
+import ResetButton from '../Containers/ResetButton'
 
 export default class HomeScreen extends Component {
   constructor(props){
@@ -47,7 +48,7 @@ export default class HomeScreen extends Component {
             <PlayPauseButton />
           </View>
           <View style={[styles.flexView, styles.resetButtonView]}>
-
+            <ResetButton />
           </View>
         </View>
       </View>
@@ -73,6 +74,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   resetButtonView: {
-    backgroundColor: 'green'
+    backgroundColor: 'transparent',
+    justifyContent: 'flex-end',
+    padding: 20
   }
 })
