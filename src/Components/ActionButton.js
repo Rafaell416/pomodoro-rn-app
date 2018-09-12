@@ -21,10 +21,10 @@ function ActionButton ({ text, textColor, buttonColor, actionToExecuteWhenPress 
 }
 
 ActionButton.propTypes = {
-  text: PropTypes.string,
-  textColor: PropTypes.string,
-  buttonColor: PropTypes.string,
-  actionToExecuteWhenPress: PropTypes.func
+  text: PropTypes.string.isRequired,
+  textColor: PropTypes.string.isRequired,
+  buttonColor: PropTypes.string.isRequired,
+  actionToExecuteWhenPress: PropTypes.func.isRequired
 }
 
 const styles = StyleSheet.create({

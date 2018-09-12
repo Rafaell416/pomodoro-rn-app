@@ -12,10 +12,10 @@ function TouchableIcon ({ name, size, color, actionToExecuteWhenPress }) {
 }
 
 TouchableIcon.propTypes = {
-  name: PropTypes.string,
+  name: PropTypes.string.isRequired,
   size: PropTypes.number,
   color: PropTypes.string,
-  actionToExecuteWhenPress: PropTypes.func
+  actionToExecuteWhenPress: PropTypes.func.isRequired
 }
 
 export default TouchableIcon

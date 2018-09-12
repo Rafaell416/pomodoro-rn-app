@@ -29,9 +29,9 @@ function InputField ({ icon, value, onChangeText, label, type }) {
 
 InputField.propTypes = {
   icon: PropTypes.string,
-  value: PropTypes.string,
-  onChangeText: PropTypes.func,
-  label: PropTypes.string,
+  value: PropTypes.string.isRequired,
+  onChangeText: PropTypes.func.isRequired,
+  label: PropTypes.string.isRequired,
   type: PropTypes.string,
 }
 

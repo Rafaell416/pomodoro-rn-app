@@ -27,7 +27,7 @@ function Header ({ title, right, left }) {
 }
 
 Header.propTypes = {
-  tile: PropTypes.string,
+  title: PropTypes.string.isRequired,
   right: PropTypes.element,
   left: PropTypes.element
 }
