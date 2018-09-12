@@ -14,14 +14,14 @@ export default class SignupScreen extends Component {
   constructor(props){
     super(props)
     this.state = {
-      user: '',
+      username: '',
       email: '',
       password: ''
     }
   }
 
   render () {
-    const { user, email, password } = this.state
+    const { username, email, password } = this.state
     return (
       <View style={styles.container}>
         <View style={styles.topSection}>
@@ -29,9 +29,9 @@ export default class SignupScreen extends Component {
         </View>
         <InputField
           icon="user"
-          label="user"
-          value={user}
-          onChangeText={ user => this.setState({ user }) }
+          label="username"
+          value={username}
+          onChangeText={ username => this.setState({ username }) }
         />
         <InputField
           icon="mail"
@@ -50,7 +50,7 @@ export default class SignupScreen extends Component {
           text="SIGN UP"
           textColor="white"
           buttonColor="#e74c3c"
-          actionToExecuteWhenPress={() => console.log('hello cosomos i was pressed!')}
+          actionToExecuteWhenPress={() => this.props.navigation.navigate('HomeScreen')}
         />
         <View style={styles.bottomTextView}>
           <Text style={styles.signupText} onPress={()=>this.props.navigation.navigate('SigninScreen')}>

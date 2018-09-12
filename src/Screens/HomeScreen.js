@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import {
   View,
+  Text,
   StyleSheet
 } from 'react-native'
+import Header from '../Components/Header'
+import { Feather } from '@expo/vector-icons'
 
 export default class HomeScreen extends Component {
   constructor(props){
@@ -14,7 +17,13 @@ export default class HomeScreen extends Component {
 
   render () {
     return (
-      <View style={styles.container}></View>
+      <View style={styles.container}>
+        <Header
+          title="Pomodoro"
+          left={ <Feather name="user" size={30} color="white"/> }
+          right={ <Feather name="settings" size={30} color="white"/> }
+        />
+      </View>
     )
   }
 }
@@ -22,6 +31,6 @@ export default class HomeScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red'
+    backgroundColor: '#e74c3c'
   }
 })
