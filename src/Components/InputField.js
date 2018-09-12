@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   inputView: {
     flex: 1,
-    paddingRight: 10,
+    paddingRight: 15,
     paddingBottom: 10,
     paddingTop: 10
   }

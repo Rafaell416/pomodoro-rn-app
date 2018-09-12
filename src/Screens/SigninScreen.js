@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {
+  Text,
   View,
   Image,
   StyleSheet,
@@ -39,8 +40,16 @@ export default class SigninScreen extends Component {
           type="password"
         />
         <ActionButton
-          
+          text="LOG IN"
+          textColor="white"
+          buttonColor="#e74c3c"
+          actionToExecuteWhenPress={() => console.log('hello cosomos i was pressed!')}
         />
+        <View style={styles.bottomTextView}>
+          <Text style={styles.signupText} onPress={()=>this.props.navigation.navigate('SignupScreen')}>
+            Don't have an account? <Text style={styles.signup}>Sign Up</Text>
+          </Text>
+        </View>
       </View>
     )
   }
@@ -61,5 +70,20 @@ const styles = StyleSheet.create({
   logoImage: {
     height: 150,
     width: 150
+  },
+  bottomTextView: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20
+  },
+  signup: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: '#95a5a6'
+  },
+  signupText: {
+    color: '#95a5a6',
+    fontSize: 15,
   }
 })
