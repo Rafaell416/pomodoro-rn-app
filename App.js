@@ -17,9 +17,7 @@ function _cacheImages (images) {
 export default class App extends Component {
   constructor(props){
     super(props)
-    this.state = {
-      isReady: false
-    }
+    this.state = { isReady: false }
   }
 
   componentWillMount(){
@@ -35,7 +33,7 @@ export default class App extends Component {
 
   render() {
     const { isReady } = this.state
-    if (isReady) return <AppNavigation />
+    if ( isReady ) return <AppNavigation />
 
     return (
       <AppLoading
