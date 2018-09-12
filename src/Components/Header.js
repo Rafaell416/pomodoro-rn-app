@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView
 } from 'react-native'
+import PropTypes from 'prop-types'
 
 function Header ({ title, right, left }) {
   return (
@@ -23,6 +24,12 @@ function Header ({ title, right, left }) {
       </View>
     </SafeAreaView>
   )
+}
+
+Header.propTypes = {
+  tile: PropTypes.string,
+  right: PropTypes.element,
+  left: PropTypes.element
 }
 
 const styles = StyleSheet.create({

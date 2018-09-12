@@ -5,7 +5,7 @@ import {
   StyleSheet
 } from 'react-native'
 import Header from '../Components/Header'
-import { Feather } from '@expo/vector-icons'
+import TouchableIcon from '../Components/TouchableIcon'
 
 export default class HomeScreen extends Component {
   constructor(props){
@@ -20,8 +20,22 @@ export default class HomeScreen extends Component {
       <View style={styles.container}>
         <Header
           title="Pomodoro"
-          left={ <Feather name="user" size={30} color="white"/> }
-          right={ <Feather name="settings" size={30} color="white"/> }
+          left={
+            <TouchableIcon
+              name="user"
+              size={30}
+              color="white"
+              actionToExecuteWhenPress={() => console.log('Pressed user icon')}
+            />
+          }
+          right={
+            <TouchableIcon
+              name="settings"
+              size={30}
+              color="white"
+              actionToExecuteWhenPress={() => console.log('Pressed settings icon')}
+            />
+          }
         />
       </View>
     )
