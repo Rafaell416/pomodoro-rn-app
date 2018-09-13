@@ -5,7 +5,6 @@ import {
   StyleSheet
 } from 'react-native'
 import { connect } from 'react-redux'
-import { createTimer } from '../Actions'
 
 class CounterTimer extends Component {
   constructor(props){
@@ -13,14 +12,6 @@ class CounterTimer extends Component {
     this.state = {
       duration: 25
     }
-  }
-
-  componentWillMount () {
-    this.props.createTimer({
-      min: '00', 
-      sec: '00',
-      active: false
-    })
   }
 
   _startCountDown = () => {
@@ -69,7 +60,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-  createTimer
+  
 }
 
 const Timer = connect(mapStateToProps, mapDispatchToProps)(CounterTimer)
