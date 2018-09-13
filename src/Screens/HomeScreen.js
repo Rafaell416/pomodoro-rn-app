@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  StyleSheet
+  StyleSheet,
+  TouchableOpacity
 } from 'react-native'
 import Header from '../Components/Header'
 import Timer from '../Containers/Timer'
@@ -26,42 +27,50 @@ export default class HomeScreen extends Component {
             <PlayPauseButton />
           </View>
           <View style={[styles.flexView, styles.modesButtonsView]}>
-            <View style={[styles.flexView, styles.alignCenterView]}>
+            <TouchableOpacity
+              onPress={() => console.log('PRESSED')}
+              style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="cpu"
                 size={40}
                 color="white"
-                actionToExecuteWhenPress={() => console.log('RESET')}
+                disabled
               />
               <Text style={styles.text}>Work</Text>
-            </View>
-            <View style={[styles.flexView, styles.alignCenterView]}>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => console.log('PRESSED')}
+              style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="battery-charging"
                 size={40}
                 color="white"
-                actionToExecuteWhenPress={() => console.log('RESET')}
+                disabled
               />
               <Text style={styles.text}>Short Break</Text>
-            </View>
-            <View style={[styles.flexView, styles.alignCenterView]}>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => console.log('PRESSED')}
+              style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="clock"
                 size={40}
                 color="white"
-                actionToExecuteWhenPress={() => console.log('RESET')}
+                disabled
               />
               <Text style={styles.text}>Long Break</Text>
-            </View>
-            <View style={[styles.flexView, styles.alignCenterView]}>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => console.log('PRESSED')}
+              style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="refresh-cw"
                 size={40}
                 color="white"
-                actionToExecuteWhenPress={() => console.log('RESET')}
+                disabled
               />
               <Text style={styles.text}>Reset</Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

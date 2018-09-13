@@ -5,38 +5,55 @@ import {
   StyleSheet
 } from 'react-native'
 import TouchableIcon from '../Components/TouchableIcon'
+import { connect } from 'react-redux'
+import { handlePlayAndPauseTimer } from '../Actions'
 
-export default class PlayPauseButton extends Component {
+class PlayPause extends Component {
   constructor(props){
     super(props)
-    this.state = {
-      play: true
-    }
+  }
+
+  _handlePlayAndPauseButton = () => {
+    const { handlePlayAndPauseTimer } = this.props
+    const { active } = this.props.timer
+
+    handlePlayAndPauseTimer(!active)
   }
 
   render () {
-    const { play } = this.state
+    const { active } = this.props.timer
     return (
       <View style={styles.container}>
         {
-          play
+          active
             ? <TouchableIcon
-                name="play"
-                size={60}
-                color="white"
-                actionToExecuteWhenPress={() => this.setState({ play: !this.state.play })}
-              />
-            : <TouchableIcon
                 name="pause"
                 size={60}
                 color="white"
-                actionToExecuteWhenPress={() => this.setState({ play: !this.state.play })}
+                actionToExecuteWhenPress={() => this._handlePlayAndPauseButton()}
+              />
+            : <TouchableIcon
+                name="play"
+                size={60}
+                color="white"
+                actionToExecuteWhenPress={() => this._handlePlayAndPauseButton()}
               />
         }
       </View>
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  timer: state.timer
+})
+
+const mapDispatchToProps = {
+  handlePlayAndPauseTimer
+}
+
+const PlayPauseButton = connect(mapStateToProps, mapDispatchToProps)(PlayPause)
+export default PlayPauseButton
 
 const styles = StyleSheet.create({
   container: {

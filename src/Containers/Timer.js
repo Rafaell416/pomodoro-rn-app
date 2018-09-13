@@ -4,18 +4,26 @@ import {
   Text,
   StyleSheet
 } from 'react-native'
+import { connect } from 'react-redux'
+import { createTimer } from '../Actions'
 
-export default class Timer extends Component {
+class CounterTimer extends Component {
   constructor(props){
     super(props)
     this.state = {
-      min: '00',
-      sec: '00',
       duration: 25
     }
   }
 
-  componentDidMount(){
+  componentWillMount () {
+    this.props.createTimer({
+      min: '00', 
+      sec: '00',
+      active: false
+    })
+  }
+
+  _startCountDown = () => {
     const { duration } = this.state
     const durationInSeconds = 60 * duration
     this._calculateTime(durationInSeconds)
@@ -23,7 +31,7 @@ export default class Timer extends Component {
 
   _calculateTime = (duration) => {
     let timer = duration, minutes, seconds
-    setInterval(() => {
+    this._interval = setInterval(() => {
       minutes = parseInt(timer / 60, 10)
       seconds = parseInt(timer % 60, 10)
 
@@ -41,9 +49,13 @@ export default class Timer extends Component {
     }, 1000)
   }
 
+  _stop = () => {
+    clearInterval(this._interval)
+  }
+
 
   render () {
-    const { min, sec } = this.state
+    const { min, sec } = this.props.timer
     return (
       <View style={styles.container}>
         <Text style={styles.timerText}>{min}:{sec}</Text>
@@ -51,6 +63,17 @@ export default class Timer extends Component {
     )
   }
 }
+
+const mapStateToProps = (state) => ({
+  timer: state.timer
+})
+
+const mapDispatchToProps = {
+  createTimer
+}
+
+const Timer = connect(mapStateToProps, mapDispatchToProps)(CounterTimer)
+export default Timer
 
 const styles = StyleSheet.create({
   container: {

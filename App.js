@@ -5,6 +5,13 @@ import {
   Asset,
   AppLoading
 } from 'expo'
+import {
+  applyMiddleware,
+  createStore
+} from 'redux'
+import logger from 'redux-logger'
+import { Provider } from 'react-redux'
+import reducer from './src/Reducers'
 
 function _cacheImages (images) {
   return images.map(image => {
@@ -33,8 +40,14 @@ export default class App extends Component {
 
 
   render() {
+    const store = createStore(reducer, applyMiddleware(logger))
     const { isReady } = this.state
-    if ( isReady ) return <AppNavigation />
+    if ( isReady )
+      return (
+        <Provider store={store}>
+          <AppNavigation />
+        </Provider>
+      )
 
     return (
       <AppLoading
