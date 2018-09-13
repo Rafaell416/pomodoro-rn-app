@@ -4,7 +4,7 @@
     "slug": "pomodoro",
     "sdkVersion": "27.0.0",
     "privacy": "public",
-    "icon": "./assets/app.png",
+    "icon": "./assets/icon.png",
     "splash": {
       "backgroundColor": "#ffffff",
       "image": "./assets/app.png"

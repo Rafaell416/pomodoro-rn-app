@@ -26,7 +26,8 @@ export default class App extends Component {
 
   _loadAssetsAsync = async () => {
     const images = await _cacheImages([
-      require('./assets/app.png')
+      require('./assets/app.png'),
+      require('./assets/icon.png')
     ])
   }
 
