@@ -5,50 +5,63 @@ import {
   StyleSheet
 } from 'react-native'
 import Header from '../Components/Header'
-import TouchableIcon from '../Components/TouchableIcon'
 import Timer from '../Containers/Timer'
 import PlayPauseButton from '../Containers/PlayPauseButton'
-import ResetButton from '../Containers/ResetButton'
+import TouchableIcon from '../Components/TouchableIcon'
 
 export default class HomeScreen extends Component {
   constructor(props){
     super(props)
-    this.state = {
-
-    }
   }
 
   render () {
     return (
       <View style={styles.container}>
-        <Header
-          title="Pomodoro"
-          left={
-            <TouchableIcon
-              name="user"
-              size={30}
-              color="white"
-              actionToExecuteWhenPress={() => console.log('Pressed user icon')}
-            />
-          }
-          right={
-            <TouchableIcon
-              name="settings"
-              size={30}
-              color="white"
-              actionToExecuteWhenPress={() => console.log('Pressed settings icon')}
-            />
-          }
-        />
-        <View style={[styles.flexView, styles.timerView]}>
+        <Header title="Pomodoro" />
+        <View style={[styles.flexView, styles.alignCenterView]}>
           <Timer />
         </View>
         <View style={[styles.flexView, styles.controlsView]}>
           <View style={[styles.flexView, styles.playPauseButtonView]}>
             <PlayPauseButton />
           </View>
-          <View style={[styles.flexView, styles.resetButtonView]}>
-            <ResetButton />
+          <View style={[styles.flexView, styles.modesButtonsView]}>
+            <View style={[styles.flexView, styles.alignCenterView]}>
+              <TouchableIcon
+                name="cpu"
+                size={40}
+                color="white"
+                actionToExecuteWhenPress={() => console.log('RESET')}
+              />
+              <Text style={styles.text}>Work</Text>
+            </View>
+            <View style={[styles.flexView, styles.alignCenterView]}>
+              <TouchableIcon
+                name="battery-charging"
+                size={40}
+                color="white"
+                actionToExecuteWhenPress={() => console.log('RESET')}
+              />
+              <Text style={styles.text}>Short Break</Text>
+            </View>
+            <View style={[styles.flexView, styles.alignCenterView]}>
+              <TouchableIcon
+                name="clock"
+                size={40}
+                color="white"
+                actionToExecuteWhenPress={() => console.log('RESET')}
+              />
+              <Text style={styles.text}>Long Break</Text>
+            </View>
+            <View style={[styles.flexView, styles.alignCenterView]}>
+              <TouchableIcon
+                name="refresh-cw"
+                size={40}
+                color="white"
+                actionToExecuteWhenPress={() => console.log('RESET')}
+              />
+              <Text style={styles.text}>Reset</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -64,7 +77,7 @@ const styles = StyleSheet.create({
   flexView: {
     flex: 1,
   },
-  timerView: {
+  alignCenterView: {
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -73,9 +86,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  resetButtonView: {
+  modesButtonsView: {
     backgroundColor: 'transparent',
-    justifyContent: 'flex-end',
-    padding: 20
+    flexDirection: 'row'
+  },
+  text: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: 'white',
+    marginTop: 8
   }
 })
