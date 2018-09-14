@@ -5,13 +5,10 @@ import {
   Asset,
   AppLoading
 } from 'expo'
-import {
-  applyMiddleware,
-  createStore
-} from 'redux'
-import logger from 'redux-logger'
-import { Provider } from 'react-redux'
-import reducer from './src/Reducers'
+import ApolloClient from 'apollo-boost'
+import { ApolloProvider } from 'react-apollo'
+
+const client = new ApolloClient({uri: 'http://192.168.56.1:3000/graphql'})
 
 function _cacheImages (images) {
   return images.map(image => {
@@ -40,13 +37,12 @@ export default class App extends Component {
 
 
   render() {
-    const store = createStore(reducer, applyMiddleware(logger))
     const { isReady } = this.state
     if ( isReady )
       return (
-        <Provider store={store}>
+        <ApolloProvider client={client}>
           <AppNavigation />
-        </Provider>
+        </ApolloProvider>
       )
 
     return (

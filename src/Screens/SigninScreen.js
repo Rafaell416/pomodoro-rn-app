@@ -9,6 +9,7 @@ import {
 const { width } = Dimensions.get('window')
 import InputField from '../Components/InputField'
 import ActionButton from '../Components/ActionButton'
+import { Snackbar } from 'react-native-paper'
 
 export default class SigninScreen extends Component {
   constructor(props){
@@ -16,12 +17,20 @@ export default class SigninScreen extends Component {
     this.state = {
       username: '',
       password: '',
+      snackBarVisible: false,
+      snackBarMessage: ''
     }
+  }
+
+  _signin = () => {
+    const { username, password } = this.state
+    const check = username && password
+    if (!check) this.setState({snackBarVisible: true, snackBarMessage: 'Please fill all inputs :)'})
   }
 
 
   render () {
-    const { username, password } = this.state
+    const { username, password, snackBarVisible, snackBarMessage } = this.state
     return (
       <View style={styles.container}>
         <View style={styles.topSection}>
@@ -44,13 +53,20 @@ export default class SigninScreen extends Component {
           text="LOG IN"
           textColor="white"
           buttonColor="#e74c3c"
-          actionToExecuteWhenPress={() => this.props.navigation.navigate('HomeScreen')}
+          actionToExecuteWhenPress={() => this._signin()}
         />
         <View style={styles.bottomTextView}>
           <Text style={styles.signupText} onPress={()=>this.props.navigation.navigate('SignupScreen')}>
             Don't have an account? <Text style={styles.signup}>Sign Up</Text>
           </Text>
         </View>
+        <Snackbar
+         visible={snackBarVisible}
+         onDismiss={() => this.setState({ snackBarVisible: false })}
+         duration={1000}
+        >
+         {snackBarMessage}
+       </Snackbar>
       </View>
     )
   }

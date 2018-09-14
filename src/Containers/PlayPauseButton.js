@@ -5,23 +5,21 @@ import {
   StyleSheet
 } from 'react-native'
 import TouchableIcon from '../Components/TouchableIcon'
-import { connect } from 'react-redux'
-import { handlePlayAndPauseTimer } from '../Actions'
 
-class PlayPause extends Component {
+export default class PlayPauseButton extends Component {
   constructor(props){
     super(props)
+    this.state = {
+      active: false
+    }
   }
 
   _handlePlayAndPauseButton = () => {
-    const { handlePlayAndPauseTimer } = this.props
-    const { active } = this.props.timer
-
-    handlePlayAndPauseTimer(!active)
+    this.setState({active: !this.state.active})
   }
 
   render () {
-    const { active } = this.props.timer
+    const { active } = this.state
     return (
       <View style={styles.container}>
         {
@@ -43,17 +41,6 @@ class PlayPause extends Component {
     )
   }
 }
-
-const mapStateToProps = (state) => ({
-  timer: state.timer
-})
-
-const mapDispatchToProps = {
-  handlePlayAndPauseTimer
-}
-
-const PlayPauseButton = connect(mapStateToProps, mapDispatchToProps)(PlayPause)
-export default PlayPauseButton
 
 const styles = StyleSheet.create({
   container: {

@@ -8,7 +8,7 @@ import {
   StyleSheet
 } from 'react-native'
 
-function InputField ({ icon, value, onChangeText, placeholder, type, onFocus }) {
+function InputField ({ icon, value, onChangeText, placeholder, type }) {
   const secure = type === 'password' ? true : false
   return (
     <View style={styles.container}>
@@ -22,7 +22,6 @@ function InputField ({ icon, value, onChangeText, placeholder, type, onFocus }) 
           onChangeText={text => onChangeText(text)}
           underlineColorAndroid="transparent"
           secureTextEntry={secure}
-          onFocus={() => console.log('focused')}
           overlayColor="#e74c3c"
           style={styles.input}
           animationConfig={{

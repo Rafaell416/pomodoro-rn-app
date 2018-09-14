@@ -4,13 +4,14 @@ import {
   Text,
   StyleSheet
 } from 'react-native'
-import { connect } from 'react-redux'
 
-class CounterTimer extends Component {
+export default class Timer extends Component {
   constructor(props){
     super(props)
     this.state = {
-      duration: 25
+      duration: 25,
+      min: 0,
+      sec: 0
     }
   }
 
@@ -46,7 +47,7 @@ class CounterTimer extends Component {
 
 
   render () {
-    const { min, sec } = this.props.timer
+    const { min, sec } = this.state
     return (
       <View style={styles.container}>
         <Text style={styles.timerText}>{min}:{sec}</Text>
@@ -54,17 +55,6 @@ class CounterTimer extends Component {
     )
   }
 }
-
-const mapStateToProps = (state) => ({
-  timer: state.timer
-})
-
-const mapDispatchToProps = {
-  
-}
-
-const Timer = connect(mapStateToProps, mapDispatchToProps)(CounterTimer)
-export default Timer
 
 const styles = StyleSheet.create({
   container: {
