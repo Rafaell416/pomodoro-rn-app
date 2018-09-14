@@ -26,6 +26,7 @@
     "react": "16.3.1",
     "react-native": "~0.55.2",
     "react-native-paper": "^2.0.1",
+    "react-native-spotlight-input": "^0.0.8",
     "react-navigation": "^2.14.0",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0"

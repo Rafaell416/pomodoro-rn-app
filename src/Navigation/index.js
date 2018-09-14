@@ -9,6 +9,6 @@ export default createStackNavigator({
   SigninScreen: { screen: SigninScreen },
   SignupScreen: { screen: SignupScreen },
 }, {
-  initialRouteName: 'HomeScreen' ,
+  initialRouteName: 'SigninScreen' ,
   navigationOptions: { header: null }
 })

@@ -29,19 +29,19 @@ export default class SignupScreen extends Component {
         </View>
         <InputField
           icon="user"
-          label="username"
+          placeholder="username"
           value={username}
           onChangeText={ username => this.setState({ username }) }
         />
         <InputField
           icon="mail"
-          label="email"
+          placeholder="email"
           value={email}
           onChangeText={ email => this.setState({ email }) }
         />
         <InputField
           icon="lock"
-          label="password"
+          placeholder="password"
           value={password}
           onChangeText={ password => this.setState({ password }) }
           type="password"
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   topSection: {
     backgroundColor: 'white',
     width: width,
-    height: 300,
+    height: 220,
     alignItems: 'center',
     justifyContent: 'center'
   },

@@ -4,7 +4,7 @@ import {
   View,
   Image,
   StyleSheet,
-  Dimensions
+  Dimensions,
 } from 'react-native'
 const { width } = Dimensions.get('window')
 import InputField from '../Components/InputField'
@@ -15,9 +15,10 @@ export default class SigninScreen extends Component {
     super(props)
     this.state = {
       username: '',
-      password: ''
+      password: '',
     }
   }
+
 
   render () {
     const { username, password } = this.state
@@ -28,13 +29,13 @@ export default class SigninScreen extends Component {
         </View>
         <InputField
           icon="user"
-          label="username"
+          placeholder="username"
           value={username}
           onChangeText={ username => this.setState({ username }) }
         />
         <InputField
           icon="lock"
-          label="password"
+          placeholder="password"
           value={password}
           onChangeText={ password => this.setState({ password }) }
           type="password"

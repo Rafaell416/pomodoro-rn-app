@@ -5686,6 +5686,10 @@ react-native-scripts@1.14.0:
     rimraf "^2.6.1"
     xdl "48.1.4"
 
+react-native-spotlight-input@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/react-native-spotlight-input/-/react-native-spotlight-input-0.0.8.tgz#932b61859ea115fd60093e6e31386ea0254ddcaf"
+
 react-native-svg-web@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-native-svg-web/-/react-native-svg-web-1.0.1.tgz#16e1784077b6e5b6c7ebd9c3829e6684211cba99"
