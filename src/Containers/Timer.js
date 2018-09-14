@@ -7,6 +7,7 @@ import {
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import { Snackbar } from 'react-native-paper'
+import { SecureStore } from 'expo'
 
 class Timer extends Component {
   constructor(props){
@@ -14,8 +15,20 @@ class Timer extends Component {
     this.state = {
       duration: 25,
       min: 0,
-      sec: 0
+      sec: 0,
+      type: '',
+      active: false
     }
+  }
+
+  async componentWillMount () {
+    const uid = await SecureStore.getItemAsync('uid')
+    this.props.mutate({ variables: { uid }})
+    .then(({data}) => {
+      const { duration, seconds, minutes, type, active } = data.timerGet
+      this.setState({ duration, sec: seconds, min: minutes, type, active })
+    })
+    .catch(err => console.log(err))
   }
 
   _startCountDown = () => {
