@@ -3,7 +3,8 @@ import AppNavigation from './src/Navigation'
 import { Image } from 'react-native'
 import {
   Asset,
-  AppLoading
+  AppLoading,
+  SecureStore
 } from 'expo'
 import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from 'react-apollo'
@@ -24,7 +25,8 @@ export default class App extends Component {
     this.state = { isReady: false }
   }
 
-  componentWillMount(){
+  async componentWillMount(){
+    await SecureStore.deleteItemAsync('access-token')
     console.disableYellowBox = true
   }
 

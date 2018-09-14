@@ -5,32 +5,51 @@ import {
   Image,
   StyleSheet,
   Dimensions,
+  ActivityIndicator
 } from 'react-native'
+import { SecureStore } from 'expo'
 const { width } = Dimensions.get('window')
 import InputField from '../Components/InputField'
 import ActionButton from '../Components/ActionButton'
 import { Snackbar } from 'react-native-paper'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 
-export default class SigninScreen extends Component {
+class SigninScreen extends Component {
   constructor(props){
     super(props)
     this.state = {
       username: '',
       password: '',
       snackBarVisible: false,
-      snackBarMessage: ''
+      snackBarMessage: '',
+      loading: false
     }
   }
 
   _signin = () => {
     const { username, password } = this.state
     const check = username && password
-    if (!check) this.setState({snackBarVisible: true, snackBarMessage: 'Please fill all inputs :)'})
+    if (!check)  {
+      this.setState({snackBarVisible: true, snackBarMessage: 'Please fill all inputs :)'})
+    } else {
+      this.setState({loading: true})
+      this.props.mutate({ variables: { username, password }})
+      .then(async ({ data })=> {
+        this.setState({loading: false})
+        await SecureStore.setItemAsync('access-token', data.login.jwt)
+        this.props.navigation.navigate('HomeScreen', {showWelcomeAlert: false})
+      })
+      .catch(err => {
+        console.log('GOT AN ERROR', err)
+        this.setState({loading: false, snackBarMessage: 'There was an error, try again :(', snackBarVisible: true})
+      })
+    }
   }
 
 
   render () {
-    const { username, password, snackBarVisible, snackBarMessage } = this.state
+    const { username, password, snackBarVisible, snackBarMessage, loading } = this.state
     return (
       <View style={styles.container}>
         <View style={styles.topSection}>
@@ -49,12 +68,15 @@ export default class SigninScreen extends Component {
           onChangeText={ password => this.setState({ password }) }
           type="password"
         />
-        <ActionButton
-          text="LOG IN"
-          textColor="white"
-          buttonColor="#e74c3c"
-          actionToExecuteWhenPress={() => this._signin()}
-        />
+        {
+          loading ? <ActivityIndicator size='large' color='#e74c3c'/>
+          : <ActionButton
+            text="LOG IN"
+            textColor="white"
+            buttonColor="#e74c3c"
+            actionToExecuteWhenPress={() => this._signin()}
+          />
+        }
         <View style={styles.bottomTextView}>
           <Text style={styles.signupText} onPress={()=>this.props.navigation.navigate('SignupScreen')}>
             Don't have an account? <Text style={styles.signup}>Sign Up</Text>
@@ -71,6 +93,17 @@ export default class SigninScreen extends Component {
     )
   }
 }
+
+
+const login = gql`
+  mutation login ($username: String!, $password: String!) {
+    login (username: $username, password: $password) {
+      username
+      _id
+      jwt
+    }
+  }
+`
 
 const styles = StyleSheet.create({
   container: {
@@ -104,3 +137,5 @@ const styles = StyleSheet.create({
     fontSize: 15,
   }
 })
+
+export default graphql(login)(SigninScreen)

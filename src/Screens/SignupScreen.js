@@ -4,8 +4,10 @@ import {
   View,
   Image,
   StyleSheet,
-  Dimensions
+  Dimensions,
+  ActivityIndicator
 } from 'react-native'
+import { SecureStore } from 'expo'
 const { width } = Dimensions.get('window')
 import InputField from '../Components/InputField'
 import ActionButton from '../Components/ActionButton'
@@ -21,22 +23,33 @@ class SignupScreen extends Component {
       email: '',
       password: '',
       snackBarVisible: false,
-      snackBarMessage: ''
+      snackBarMessage: '',
+      loading: false
     }
   }
 
   _signup = async () => {
     const { username, email, password } = this.state
     const check = username && email && password
-    if (!check) this.setState({ snackBarVisible: true, snackBarMessage: 'Please fill all inputs :)' })
-
-    this.props.mutate({variables: { username, email, password }})
-    .then(({ data })=> console.log('GOT DATA', data))
-    .catch(err => console.log('GOT AN ERROR', err))
+    if (!check) {
+      this.setState({ snackBarVisible: true, snackBarMessage: 'Please fill all inputs :)' })
+    } else {
+      this.setState({loading: true})
+      this.props.mutate({variables: { username, email, password }})
+      .then(async ({ data })=> {
+        this.setState({loading: false})
+        await SecureStore.setItemAsync('access-token', data.signup.jwt)
+        this.props.navigation.navigate('HomeScreen', {showWelcomeAlert: true})
+      })
+      .catch(err => {
+        console.log('GOT AN ERROR', err)
+        this.setState({loading: false, snackBarMessage: 'There was an error, try again :(', snackBarVisible: true})
+      })
+    }
   }
 
   render () {
-    const { username, email, password, snackBarVisible, snackBarMessage } = this.state
+    const { username, email, password, snackBarVisible, snackBarMessage, loading } = this.state
     return (
       <View style={styles.container}>
         <View style={styles.topSection}>
@@ -61,12 +74,15 @@ class SignupScreen extends Component {
           onChangeText={ password => this.setState({ password }) }
           type="password"
         />
-        <ActionButton
-          text="SIGN UP"
-          textColor="white"
-          buttonColor="#e74c3c"
-          actionToExecuteWhenPress={() => this._signup()}
-        />
+        {
+          loading ? <ActivityIndicator size='large' color='#e74c3c'/>
+          : <ActionButton
+            text="SIGN UP"
+            textColor="white"
+            buttonColor="#e74c3c"
+            actionToExecuteWhenPress={() => this._signup()}
+          />
+        }
         <View style={styles.bottomTextView}>
           <Text style={styles.signupText} onPress={()=>this.props.navigation.navigate('SigninScreen')}>
             Already have an account? <Text style={styles.signup}>Log In</Text>
@@ -75,7 +91,7 @@ class SignupScreen extends Component {
         <Snackbar
          visible={snackBarVisible}
          onDismiss={() => this.setState({ snackBarVisible: false })}
-         duration={1000}
+         duration={2000}
         >
          {snackBarMessage}
        </Snackbar>
@@ -94,6 +110,7 @@ const signup = gql`
       _id
       email
       username
+      jwt
     }
   }
 `

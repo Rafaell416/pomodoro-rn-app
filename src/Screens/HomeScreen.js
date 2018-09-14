@@ -9,16 +9,25 @@ import Header from '../Components/Header'
 import Timer from '../Containers/Timer'
 import PlayPauseButton from '../Containers/PlayPauseButton'
 import TouchableIcon from '../Components/TouchableIcon'
-import { connect } from 'react-redux'
-import { setIntervalType, resetTimer } from '../Actions'
+import { Snackbar } from 'react-native-paper'
 
-class Home extends Component {
+
+export default class HomeScreen extends Component {
   constructor(props){
     super(props)
+    this.state = {
+      snackBarMessage: '',
+      snackBarVisible: false
+    }
+  }
+
+  componentDidMount () {
+    const showWelcomeAlert = this.props.navigation.state.params.showWelcomeAlert || null
+    if (showWelcomeAlert) this.setState({ snackBarVisible: true, snackBarMessage: 'Welcome to pomodoro, we hope you to be productive :)' })
   }
 
   render () {
-    const { setIntervalType, resetTimer } = this.props
+    const { snackBarMessage, snackBarVisible } = this.state
     return (
       <View style={styles.container}>
         <Header title="Pomodoro" />
@@ -31,7 +40,7 @@ class Home extends Component {
           </View>
           <View style={[styles.flexView, styles.modesButtonsView]}>
             <TouchableOpacity
-              onPress={() => setIntervalType({type: 'work', duration: 25})}
+              onPress={() => null} //setIntervalType({type: 'work', duration: 25})
               style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="cpu"
@@ -42,7 +51,7 @@ class Home extends Component {
               <Text style={styles.text}>Work</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => setIntervalType({type: 'short_break', duration: 5})}
+              onPress={() => null} //setIntervalType({type: 'short_break', duration: 5})
               style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="battery-charging"
@@ -53,7 +62,7 @@ class Home extends Component {
               <Text style={styles.text}>Short Break</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => setIntervalType({type: 'long_break', duration: 15})}
+              onPress={() => null} //setIntervalType({type: 'long_break', duration: 15})
               style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="clock"
@@ -64,15 +73,7 @@ class Home extends Component {
               <Text style={styles.text}>Long Break</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => resetTimer({
-                min: '00',
-                sec: '00',
-                active: false,
-                interval: {
-                  type: null,
-                  duration: 0
-                }
-              })}
+              onPress={() => null}
               style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="refresh-cw"
@@ -84,22 +85,18 @@ class Home extends Component {
             </TouchableOpacity>
           </View>
         </View>
+        <Snackbar
+         visible={snackBarVisible}
+         onDismiss={() => this.setState({ snackBarVisible: false })}
+         duration={2000}
+        >
+         {snackBarMessage}
+       </Snackbar>
       </View>
     )
   }
 }
 
-const mapStateToProps = (state) => ({
-  timer: state.timer
-})
-
-const mapDispatchToProps = {
-  setIntervalType,
-  resetTimer
-}
-
-const HomeScreen = connect(mapStateToProps, mapDispatchToProps)(Home)
-export default HomeScreen
 
 const styles = StyleSheet.create({
   container: {

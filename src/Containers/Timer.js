@@ -50,7 +50,7 @@ export default class Timer extends Component {
     const { min, sec } = this.state
     return (
       <View style={styles.container}>
-        <Text style={styles.timerText}>{min}:{sec}</Text>
+        <Text style={styles.timerText}>{`${min}0:0${sec}`}</Text>
       </View>
     )
   }
