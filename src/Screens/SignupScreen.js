@@ -39,6 +39,7 @@ class SignupScreen extends Component {
       .then(async ({ data })=> {
         this.setState({loading: false})
         await SecureStore.setItemAsync('access-token', data.signup.jwt)
+        await SecureStore.setItemAsync('uid', data.signup._id)
         this.props.navigation.navigate('HomeScreen', {showWelcomeAlert: true})
       })
       .catch(err => {

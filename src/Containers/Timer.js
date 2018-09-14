@@ -4,8 +4,11 @@ import {
   Text,
   StyleSheet
 } from 'react-native'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
+import { Snackbar } from 'react-native-paper'
 
-export default class Timer extends Component {
+class Timer extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -56,6 +59,19 @@ export default class Timer extends Component {
   }
 }
 
+const getTimer = gql`
+  mutation getTimer ($uid: String! ) {
+    timerGet(uid: $uid) {
+      uid
+      active
+      duration
+      minutes
+      seconds
+      type
+    }
+  }
+`
+
 const styles = StyleSheet.create({
   container: {
     height: 250,
@@ -73,3 +89,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   }
 })
+
+export default graphql(getTimer)(Timer)

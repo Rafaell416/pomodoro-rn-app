@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import AppNavigation from './src/Navigation'
 import { Image } from 'react-native'
 import {
   Asset,
@@ -8,6 +7,7 @@ import {
 } from 'expo'
 import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from 'react-apollo'
+import AppNavigation from './src/Navigation'
 
 const client = new ApolloClient({uri: 'http://192.168.56.1:3000/graphql'})
 
@@ -22,11 +22,12 @@ function _cacheImages (images) {
 export default class App extends Component {
   constructor(props){
     super(props)
-    this.state = { isReady: false }
+    this.state = {
+      isReady: false,
+    }
   }
 
-  async componentWillMount(){
-    await SecureStore.deleteItemAsync('access-token')
+  async componentWillMount () {
     console.disableYellowBox = true
   }
 

@@ -1,14 +1,30 @@
 import React from 'react'
-import { createStackNavigator } from 'react-navigation'
+import { createSwitchNavigator, createStackNavigator } from 'react-navigation'
 import HomeScreen from '../Screens/HomeScreen'
 import SigninScreen from '../Screens/SigninScreen'
 import SignupScreen from '../Screens/SignupScreen'
+import AuthLoadingScreen from '../Screens/AuthLoadingScreen'
 
-export default createStackNavigator({
-  HomeScreen: { screen: HomeScreen },
+const AppStack = createStackNavigator({
+  HomeScreen: { screen: HomeScreen }
+}, {
+  navigationOptions: { header: null }
+})
+
+const AuthenticationStack = createStackNavigator({
   SigninScreen: { screen: SigninScreen },
   SignupScreen: { screen: SignupScreen },
 }, {
   initialRouteName: 'SigninScreen' ,
   navigationOptions: { header: null }
 })
+
+export default createSwitchNavigator(
+  {
+    AuthLoadingScreen: AuthLoadingScreen,
+    AppStack: AppStack,
+    AuthenticationStack: AuthenticationStack
+  },{
+    initialRouteName: 'AuthLoadingScreen'
+  }
+)

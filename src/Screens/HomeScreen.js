@@ -22,7 +22,7 @@ export default class HomeScreen extends Component {
   }
 
   componentDidMount () {
-    const showWelcomeAlert = this.props.navigation.state.params.showWelcomeAlert || null
+    const showWelcomeAlert = this.props.navigation.state.params ? this.props.navigation.state.params.showWelcomeAlert : false
     if (showWelcomeAlert) this.setState({ snackBarVisible: true, snackBarMessage: 'Welcome to pomodoro, we hope you to be productive :)' })
   }
 
