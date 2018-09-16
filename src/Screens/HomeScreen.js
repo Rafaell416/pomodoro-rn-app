@@ -30,7 +30,16 @@ export default class HomeScreen extends Component {
     const { snackBarMessage, snackBarVisible } = this.state
     return (
       <View style={styles.container}>
-        <Header title="Pomodoro" />
+        <Header title="Pomodoro"
+          left= {
+            <TouchableIcon
+              name='user'
+              size={30}
+              color='white'
+              actionToExecuteWhenPress={() => this.props.navigation.navigate('ProfileScreen')}
+            />
+          }
+        />
         <View style={[styles.flexView, styles.alignCenterView]}>
           <Timer />
         </View>

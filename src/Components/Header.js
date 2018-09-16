@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 
-function Header ({ title, right, left }) {
+function Header ({ title, right, left, titleColor }) {
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -16,7 +16,7 @@ function Header ({ title, right, left }) {
           {left}
         </View>
         <View style={styles.titleView}>
-          <Text style={styles.title}>{title}</Text>
+          <Text style={[styles.title, {color: titleColor  || 'white'}]}>{title}</Text>
         </View>
         <View style={styles.iconView}>
           {right}
@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   title: {
-    color: 'white',
     fontSize: 20,
     fontWeight: 'bold'
   },

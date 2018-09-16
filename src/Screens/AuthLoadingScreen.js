@@ -14,7 +14,6 @@ export default class AuthLoadingScreen extends Component {
 
   _bootstrapAsync = async () => {
     const token = await SecureStore.getItemAsync('access-token')
-    console.log(token)
     this.props.navigation.navigate(token ? 'AppStack' : 'AuthenticationStack')
   }
 

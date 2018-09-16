@@ -4,9 +4,11 @@ import HomeScreen from '../Screens/HomeScreen'
 import SigninScreen from '../Screens/SigninScreen'
 import SignupScreen from '../Screens/SignupScreen'
 import AuthLoadingScreen from '../Screens/AuthLoadingScreen'
+import ProfileScreen from '../Screens/ProfileScreen'
 
 const AppStack = createStackNavigator({
-  HomeScreen: { screen: HomeScreen }
+  HomeScreen: { screen: HomeScreen },
+  ProfileScreen: { screen: ProfileScreen }
 }, {
   navigationOptions: { header: null }
 })
