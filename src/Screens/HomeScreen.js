@@ -17,7 +17,7 @@ export default class HomeScreen extends Component {
     super(props)
     this.state = {
       snackBarMessage: '',
-      snackBarVisible: false
+      snackBarVisible: false,
     }
   }
 

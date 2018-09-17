@@ -4,14 +4,17 @@ import {
   Image,
   Text,
   Alert,
-  StyleSheet
+  StyleSheet,
+  ActivityIndicator
 } from 'react-native'
-import { SecureStore } from 'expo'
+import gql from 'graphql-tag'
+import { graphql } from 'react-apollo'
+
 import Header from '../Components/Header'
 import ActionButton from '../Components/ActionButton'
 import TouchableIcon from '../Components/TouchableIcon'
 
-export default class ProfileScreen extends Component {
+class ProfileScreen extends Component {
   constructor(props){
     super(props)
   }
@@ -23,41 +26,62 @@ export default class ProfileScreen extends Component {
   }
 
   render () {
-    return (
-      <View style={styles.container}>
-        <Header
-          title="Profile"
-          titleColor="#e74c3c"
-          left={
-            <TouchableIcon
-              name='arrow-left'
-              size={30}
-              color='#e74c3c'
-              actionToExecuteWhenPress={() => this.props.navigation.goBack()}
-            />
-          }
-        />
-        <View style={styles.topView}>
-          <View style={styles.profileInfoView}>
-            <View style={styles.profileImageView}>
-              <Image fadeDuration={0} style={styles.profileImage} source={{uri: 'https://api.adorable.io/avatars/285/abott@adorable.png'}}/>
+    const { loading, currentUser } = this.props.data
+    if (loading) {
+      return <ActivityIndicator size='large' color='#e74c3c'/>
+    }
+
+    if (currentUser) {
+      const { username, email } = currentUser
+      return (
+        <View style={styles.container}>
+          <View>
+              <Header
+                title="Profile"
+                titleColor="#e74c3c"
+                left={
+                  <TouchableIcon
+                    name='arrow-left'
+                    size={30}
+                    color='#e74c3c'
+                    actionToExecuteWhenPress={() => this.props.navigation.goBack()}
+                  />
+                }
+              />
+              <View style={styles.topView}>
+                <View style={styles.profileInfoView}>
+                  <View style={styles.profileImageView}>
+                    <Image fadeDuration={0} style={styles.profileImage} source={{uri: 'https://api.adorable.io/avatars/285/abott@adorable.png'}}/>
+                  </View>
+                  <Text style={styles.username}>{username}</Text>
+                  <Text style={styles.email}>{email}</Text>
+                </View>
+              </View>
+              <View style={styles.bottomView}>
+                <ActionButton
+                  text="LOG OUT"
+                  textColor="white"
+                  buttonColor="#e74c3c"
+                  actionToExecuteWhenPress={() => this._logOut()}
+                />
+              </View>
             </View>
-            <Text style={styles.username}>Rafa</Text>
-            <Text style={styles.email}>rvillarreal416@gmail.com</Text>
-          </View>
         </View>
-        <View style={styles.bottomView}>
-          <ActionButton
-            text="LOG OUT"
-            textColor="white"
-            buttonColor="#e74c3c"
-            actionToExecuteWhenPress={() => this._logOut()}
-          />
-        </View>
-      </View>
-    )
+      )
+    }
   }
 }
+
+const getCurrentUser = gql`
+  query currentUser {
+    currentUser {
+      username
+      email
+      _id
+    }
+  }
+`
+
 
 const styles = StyleSheet.create({
   container: {
@@ -104,3 +128,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   }
 })
+
+export default graphql(getCurrentUser)(ProfileScreen)

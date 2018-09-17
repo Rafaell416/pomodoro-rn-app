@@ -5,11 +5,29 @@ import {
   AppLoading,
   SecureStore
 } from 'expo'
-import ApolloClient from 'apollo-boost'
+import { ApolloClient } from 'apollo-client'
+import { createHttpLink } from 'apollo-link-http'
+import { setContext } from 'apollo-link-context'
+import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from 'react-apollo'
 import AppNavigation from './src/Navigation'
 
-const client = new ApolloClient({uri: 'http://192.168.56.1:3000/graphql'})
+const httpLink = createHttpLink({ uri: 'http://192.168.56.1:3000/graphql' })
+
+const authLink = setContext( async (_, { headers }) => {
+  const token = await SecureStore.getItemAsync('access-token')
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    }
+  }
+})
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
+})
 
 function _cacheImages (images) {
   return images.map(image => {

@@ -21,7 +21,10 @@
     "preset": "jest-expo"
   },
   "dependencies": {
-    "apollo-boost": "^0.1.16",
+    "apollo-cache-inmemory": "^1.2.10",
+    "apollo-client": "^2.4.2",
+    "apollo-link-context": "^1.0.9",
+    "apollo-link-http": "^1.5.5",
     "expo": "^27.0.1",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.9.2",
@@ -31,9 +34,7 @@
     "react-native": "~0.55.2",
     "react-native-paper": "^2.0.1",
     "react-native-spotlight-input": "^0.0.8",
-    "react-navigation": "^2.14.0",
-    "react-redux": "^5.0.7",
-    "redux": "^4.0.0"
+    "react-navigation": "^2.14.0"
   },
   "proxy": {
     "/api": {
