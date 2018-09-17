@@ -45,7 +45,7 @@ export default class App extends Component {
     }
   }
 
-  async componentWillMount () {
+  componentWillMount () {
     console.disableYellowBox = true
   }
 

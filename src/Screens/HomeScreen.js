@@ -5,14 +5,18 @@ import {
   StyleSheet,
   TouchableOpacity
 } from 'react-native'
+import { SecureStore } from 'expo'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
+import { Snackbar } from 'react-native-paper'
+
 import Header from '../Components/Header'
 import Timer from '../Containers/Timer'
 import PlayPauseButton from '../Containers/PlayPauseButton'
 import TouchableIcon from '../Components/TouchableIcon'
-import { Snackbar } from 'react-native-paper'
 
 
-export default class HomeScreen extends Component {
+class Home extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -24,6 +28,20 @@ export default class HomeScreen extends Component {
   componentDidMount () {
     const showWelcomeAlert = this.props.navigation.state.params ? this.props.navigation.state.params.showWelcomeAlert : false
     if (showWelcomeAlert) this.setState({ snackBarVisible: true, snackBarMessage: 'Welcome to pomodoro, we hope you to be productive :)' })
+  }
+
+  _handleChangeTimerType = async (type) => {
+    const uid = await SecureStore.getItemAsync('uid')
+    this.props.changeTimerTypeMutation({variables: { uid, type }})
+    .then(({ data }) => console.log(data))
+    .catch(err => console.log(err))
+  }
+
+  _handleResetTimer = async () => {
+    const uid = await SecureStore.getItemAsync('uid')
+    this.props.resetTimerMutation({ variables: { uid } })
+    .then(({ data }) => console.log(data))
+    .catch(err => console.log(err))
   }
 
   render () {
@@ -49,7 +67,7 @@ export default class HomeScreen extends Component {
           </View>
           <View style={[styles.flexView, styles.modesButtonsView]}>
             <TouchableOpacity
-              onPress={() => null} //setIntervalType({type: 'work', duration: 25})
+              onPress={() => this._handleChangeTimerType('work')}
               style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="cpu"
@@ -60,7 +78,7 @@ export default class HomeScreen extends Component {
               <Text style={styles.text}>Work</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => null} //setIntervalType({type: 'short_break', duration: 5})
+              onPress={() => this._handleChangeTimerType('short_break')}
               style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="battery-charging"
@@ -71,7 +89,7 @@ export default class HomeScreen extends Component {
               <Text style={styles.text}>Short Break</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => null} //setIntervalType({type: 'long_break', duration: 15})
+              onPress={() => this._handleChangeTimerType('long_break')} //setIntervalType({type: 'long_break', duration: 15})
               style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="clock"
@@ -82,7 +100,7 @@ export default class HomeScreen extends Component {
               <Text style={styles.text}>Long Break</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => null}
+              onPress={() => this._handleResetTimer()}
               style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="refresh-cw"
@@ -105,6 +123,30 @@ export default class HomeScreen extends Component {
     )
   }
 }
+
+const changeTimerType = gql`
+  mutation changeTimerType ($uid: String!, $type: String!) {
+    timerChangeType (uid: $uid, type: $type) {
+      type
+      active
+      duration
+      minutes
+      seconds
+    }
+  }
+`
+
+const resetTimer = gql`
+  mutation resetTimer ($uid: String!) {
+    timerReset(uid: $uid){
+      type
+      active
+      duration
+      minutes
+      seconds
+    }
+  }
+`
 
 
 const styles = StyleSheet.create({
@@ -135,3 +177,9 @@ const styles = StyleSheet.create({
     marginTop: 8
   }
 })
+
+const HomeScreen = graphql(resetTimer, { name: 'resetTimerMutation' })(
+  graphql(changeTimerType, { name: 'changeTimerTypeMutation' })(Home)
+)
+
+export default HomeScreen
