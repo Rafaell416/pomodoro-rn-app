@@ -7,12 +7,13 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 
-function ActionButton ({ text, textColor, buttonColor, actionToExecuteWhenPress }) {
+function ActionButton ({ text, textColor, buttonColor, actionToExecuteWhenPress, disabled }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        style={[styles.button, {backgroundColor: buttonColor}]}
+        style={[styles.button, {backgroundColor: buttonColor}, disabled && styles.disabledBackgroundColor]}
         onPress={() => actionToExecuteWhenPress()}
+        disabled={disabled || false}
       >
         <Text style={[styles.text, {color: textColor}]}>{text}</Text>
       </TouchableOpacity>
@@ -21,10 +22,10 @@ function ActionButton ({ text, textColor, buttonColor, actionToExecuteWhenPress 
 }
 
 ActionButton.propTypes = {
-  text: PropTypes.string,
-  textColor: PropTypes.string,
-  buttonColor: PropTypes.string,
-  actionToExecuteWhenPress: PropTypes.func
+  text: PropTypes.string.isRequired,
+  textColor: PropTypes.string.isRequired,
+  buttonColor: PropTypes.string.isRequired,
+  actionToExecuteWhenPress: PropTypes.func.isRequired
 }
 
 const styles = StyleSheet.create({
@@ -46,6 +47,9 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     fontWeight: 'bold'
+  },
+  disabledBackgroundColor: {
+    backgroundColor: '#bdc3c7'
   }
 })
 

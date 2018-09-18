@@ -5,7 +5,8 @@
   "devDependencies": {
     "jest-expo": "~27.0.0",
     "react-native-scripts": "1.14.0",
-    "react-test-renderer": "16.3.1"
+    "react-test-renderer": "16.3.1",
+    "redux-logger": "^3.0.6"
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
   "scripts": {
@@ -20,11 +21,29 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "apollo-cache-inmemory": "^1.2.10",
+    "apollo-client": "^2.4.2",
+    "apollo-link": "^1.2.3",
+    "apollo-link-context": "^1.0.9",
+    "apollo-link-http": "^1.5.5",
+    "apollo-link-state": "^0.4.2",
+    "apollo-link-ws": "^1.0.9",
+    "apollo-utilities": "^1.0.21",
     "expo": "^27.0.1",
+    "graphql": "^14.0.2",
+    "graphql-tag": "^2.9.2",
     "prop-types": "^15.6.2",
     "react": "16.3.1",
+    "react-apollo": "^2.1.11",
     "react-native": "~0.55.2",
     "react-native-paper": "^2.0.1",
-    "react-navigation": "^2.14.0"
+    "react-native-spotlight-input": "^0.0.8",
+    "react-navigation": "^2.14.0",
+    "subscriptions-transport-ws": "^0.9.14"
+  },
+  "proxy": {
+    "/api": {
+      "target": "https://pomodoro-backend-rgywhopemg.now.sh/graphql"
+    }
   }
 }
