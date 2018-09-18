@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ActivityIndicator
 } from 'react-native'
+import { SecureStore } from 'expo'
 import gql from 'graphql-tag'
 import { graphql } from 'react-apollo'
 

@@ -89,7 +89,7 @@ class Home extends Component {
               <Text style={styles.text}>Short Break</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this._handleChangeTimerType('long_break')} //setIntervalType({type: 'long_break', duration: 15})
+              onPress={() => this._handleChangeTimerType('long_break')}
               style={[styles.flexView, styles.alignCenterView]}>
               <TouchableIcon
                 name="clock"
