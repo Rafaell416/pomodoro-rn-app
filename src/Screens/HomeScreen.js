@@ -6,7 +6,7 @@ import {
   TouchableOpacity
 } from 'react-native'
 import { SecureStore } from 'expo'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { Snackbar } from 'react-native-paper'
 
@@ -148,6 +148,12 @@ const resetTimer = gql`
   }
 `
 
+const changeLocalTimerType = gql`
+  mutation changeLocalTimerType ($type: String!) {
+    changeLocalTimerType (type: $type) @client
+  }
+`
+
 
 const styles = StyleSheet.create({
   container: {
@@ -178,8 +184,10 @@ const styles = StyleSheet.create({
   }
 })
 
-const HomeScreen = graphql(resetTimer, { name: 'resetTimerMutation' })(
-  graphql(changeTimerType, { name: 'changeTimerTypeMutation' })(Home)
-)
+const HomeScreen = compose(
+  graphql(resetTimer, { name: 'resetTimerMutation' }),
+  graphql(changeTimerType, { name: 'changeTimerTypeMutation' }),
+  graphql(changeLocalTimerType, { name: 'changeLocalTimerType' })
+)(Home)
 
 export default HomeScreen

@@ -4,40 +4,39 @@ import {
   Text,
   StyleSheet
 } from 'react-native'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { Snackbar } from 'react-native-paper'
 import { SecureStore } from 'expo'
 
-class Timer extends Component {
+class TimerContainer extends Component {
   constructor(props){
     super(props)
     this.state = {
-      duration: 25,
-      min: 0,
-      sec: 0,
-      type: '',
-      active: false
+      minutes: '00',
+      seconds: '00'
     }
   }
 
-  async componentWillMount () {
+  componentWillMount () {
+    this._getTimerData()
+  }
+
+  _getTimerData = async () => {
     const uid = await SecureStore.getItemAsync('uid')
-    this.props.mutate({ variables: { uid }})
-    .then(({data}) => {
-      const { duration, seconds, minutes, type, active } = data.timerGet
-      this.setState({ duration, sec: seconds, min: minutes, type, active })
-    })
-    .catch(err => console.log(err))
+    const { data: { timerGet } } = await this.props.getTimerFromRemoteSource({ variables: { uid }})
+    const { data: { saveTimer: { timer } } } = await this.props.saveTimerInLocalCache({ variables: { timer: timerGet } })
+    { timer.active ? this._startCountDown(timer.duration, uid) : null }
   }
 
-  _startCountDown = () => {
-    const { duration } = this.state
+  _startCountDown = (duration, uid) => {
+    console.log('countdown started...')
     const durationInSeconds = 60 * duration
-    this._calculateTime(durationInSeconds)
+    this._calculateTime(durationInSeconds, uid)
   }
 
-  _calculateTime = (duration) => {
+  _calculateTime = (duration, uid) => {
+    console.log('calculating...')
     let timer = duration, minutes, seconds
     this._interval = setInterval(() => {
       minutes = parseInt(timer / 60, 10)
@@ -47,9 +46,13 @@ class Timer extends Component {
       seconds = seconds < 10 ? "0" + seconds : seconds
 
       this.setState({
-        min: minutes,
-        sec: seconds
+        minutes,
+        seconds
       })
+
+      console.log(minutes, seconds)
+
+      this.props.updateCounter({ variables: { uid, minutes, seconds } })
 
       if (--timer < 0) {
         timer = duration
@@ -63,27 +66,15 @@ class Timer extends Component {
 
 
   render () {
-    const { min, sec } = this.state
+    const { minutes, seconds } = this.props.getTimerFromLocalCache.timer
+    //const { minutes, seconds } = this.state
     return (
       <View style={styles.container}>
-        <Text style={styles.timerText}>{`${min}0:0${sec}`}</Text>
+        <Text style={styles.timerText}>{`${minutes}:${seconds}`}</Text>
       </View>
     )
   }
 }
-
-const getTimer = gql`
-  mutation getTimer ($uid: String! ) {
-    timerGet(uid: $uid) {
-      uid
-      active
-      duration
-      minutes
-      seconds
-      type
-    }
-  }
-`
 
 const styles = StyleSheet.create({
   container: {
@@ -103,4 +94,51 @@ const styles = StyleSheet.create({
   }
 })
 
-export default graphql(getTimer)(Timer)
+const getTimerFromRemoteSource = gql`
+  mutation getTimer ($uid: String! ) {
+    timerGet(uid: $uid) {
+      uid
+      active
+      duration
+      minutes
+      seconds
+      type
+    }
+  }
+`
+
+const saveTimerInLocalCache = gql`
+  mutation saveTimer ($timer: Timer!){
+    saveTimer(timer: $timer) @client
+  }
+`
+
+const updateCounter = gql`
+  mutation updateCounter ($uid: String!, $minutes: Float!, $seconds: Float!) {
+    timerUpdateCounter(uid:$uid, minutes:$minutes, seconds:$seconds) {
+      minutes
+      seconds
+    }
+  }
+`
+
+const getTimerFromLocalCache = gql`
+  query getTimerFromCache {
+    timer @client {
+      type
+      duration
+      minutes
+      seconds
+      active
+    }
+  }
+`
+
+const Timer = compose (
+  graphql(getTimerFromRemoteSource, { name: 'getTimerFromRemoteSource' }),
+  graphql(saveTimerInLocalCache, { name: 'saveTimerInLocalCache' }),
+  graphql(getTimerFromLocalCache, { name: 'getTimerFromLocalCache' }),
+  graphql(updateCounter, { name: 'updateCounter' })
+)(TimerContainer)
+
+export default Timer

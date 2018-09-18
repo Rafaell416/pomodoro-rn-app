@@ -4,7 +4,7 @@ import {
   Text,
   StyleSheet
 } from 'react-native'
-import { graphql } from 'react-apollo'
+import { graphql, compose } from 'react-apollo'
 import gql from 'graphql-tag'
 import { SecureStore } from 'expo'
 
@@ -13,29 +13,24 @@ import TouchableIcon from '../Components/TouchableIcon'
 class PlayPause extends Component {
   constructor(props){
     super(props)
-    this.state = {
-      active: false
-    }
   }
 
   _handlePlayAndPauseButton = async () => {
     const uid = await SecureStore.getItemAsync('uid')
-    const { active } = this.state
+    const { active } = this.props.getTimerFromLocalCache.timer
     if (active) {
-      this.setState({ active: !this.state.active })
       this.props.pauseTimerMutation({ variables: { uid } })
-      .then(({ data }) => console.log(data))
+      .then(({ data }) => this.props.pauseLocalTimer({ variables: { active: data.timerPause.active } }))
       .catch(err => console.log(err))
     } else {
-      this.setState({ active: !this.state.active })
       this.props.playTimerMutation({ variables: { uid } })
-      .then(({ data }) => console.log(data))
-      .catch(err => console.log(data))
+      .then(({ data }) => this.props.playLocalTimer({ variables: { active: data.timerPlay.active } }))
+      .catch(err => console.log(err))
     }
   }
 
   render () {
-    const { active } = this.state
+    const { active } = this.props.getTimerFromLocalCache.timer
     return (
       <View style={styles.container}>
         {
@@ -57,6 +52,18 @@ class PlayPause extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    height: 80,
+    width: 80,
+    borderRadius: 80 / 2,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingLeft: 10
+  }
+})
 
 const playTimer = gql`
   mutation playTimer ($uid: String!) {
@@ -82,20 +89,36 @@ const pauseTimer = gql`
   }
 `
 
-const styles = StyleSheet.create({
-  container: {
-    height: 80,
-    width: 80,
-    borderRadius: 80 / 2,
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingLeft: 10
+const getTimerFromLocalCache = gql`
+  query getTimerFromCache {
+    timer @client {
+      type
+      duration
+      minutes
+      seconds
+      active
+    }
   }
-})
+`
 
-const PlayPauseButton = graphql(playTimer, { name: 'playTimerMutation' })(
-  graphql(pauseTimer, { name: 'pauseTimerMutation' })(PlayPause)
-)
+const playLocalTimer = gql`
+  mutation playTimer ($active: Boolean!) {
+    timerPlay (active: $active) @client
+  }
+`
+
+const pauseLocalTimer = gql`
+  mutation pauseTimer ($active: Boolean!){
+    timerPause (active: $active) @client
+  }
+`
+
+const PlayPauseButton = compose(
+  graphql(playTimer, { name: 'playTimerMutation' }),
+  graphql(pauseTimer, { name: 'pauseTimerMutation' }),
+  graphql(getTimerFromLocalCache, { name: 'getTimerFromLocalCache' }),
+  graphql(playLocalTimer, { name: 'playLocalTimer' }),
+  graphql(pauseLocalTimer, { name: 'pauseLocalTimer' })
+)(PlayPause)
 
 export default PlayPauseButton
