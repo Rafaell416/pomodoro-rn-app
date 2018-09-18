@@ -9,34 +9,58 @@ import gql from 'graphql-tag'
 import { Snackbar } from 'react-native-paper'
 import { SecureStore } from 'expo'
 
+const timerCounterUpdated = gql`
+  subscription timerUpdated {
+    timerCounterUpdated {
+      uid
+      active
+      duration
+      minutes
+      seconds
+    }
+  }
+`
+
 class TimerContainer extends Component {
   constructor(props){
     super(props)
-    this.state = {
-      minutes: '00',
-      seconds: '00'
-    }
   }
 
   componentWillMount () {
-    //this._getTimerData()
+    this._getTimerData()
+  }
+
+  componentDidMount () {
+    this.props.getTimerFromLocalCache.subscribeToMore({
+      document: timerCounterUpdated,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev
+
+        const { minutes, seconds, uid } = subscriptionData.data.timerCounterUpdated
+        this.props.updateCounter({ variables: { uid, minutes, seconds } })
+      }
+    })
   }
 
   _getTimerData = async () => {
     const uid = await SecureStore.getItemAsync('uid')
     const { data: { timerGet } } = await this.props.getTimerFromRemoteSource({ variables: { uid }})
-    const { data: { saveTimer: { timer } } } = await this.props.saveTimerInLocalCache({ variables: { timer: timerGet } })
-    { timer.active ? this._startCountDown(timer.duration, uid) : null }
+    await this.props.saveTimerInLocalCache({ variables: { timer: timerGet } })
   }
 
 
   render () {
-    //const { minutes, seconds } = this.props.getTimerFromLocalCache.timer
-    const { minutes, seconds } = this.state
+    const { minutes, seconds } = this.props.getTimerFromLocalCache.timer
     return (
-      <View style={styles.container}>
-        <Text style={styles.timerText}>{`${minutes}:${seconds}`}</Text>
-      </View>
+      <Subscription
+        subscription={timerCounterUpdated}
+      >
+        {() => (
+          <View style={styles.container}>
+            <Text style={styles.timerText}>{`${minutes}:${seconds}`}</Text>
+          </View>
+        )}
+      </Subscription>
     )
   }
 }
@@ -72,38 +96,35 @@ const getTimerFromRemoteSource = gql`
   }
 `
 
-// const saveTimerInLocalCache = gql`
-//   mutation saveTimer ($timer: Timer!){
-//     saveTimer(timer: $timer) @client
-//   }
-// `
+const saveTimerInLocalCache = gql`
+  mutation saveTimer ($timer: Timer!){
+    saveTimer(timer: $timer) @client
+  }
+`
 
-// const updateCounter = gql`
-//   mutation updateCounter ($uid: String!, $minutes: Float!, $seconds: Float!) {
-//     timerUpdateCounter(uid:$uid, minutes:$minutes, seconds:$seconds) {
-//       minutes
-//       seconds
-//     }
-//   }
-// `
+const updateCounter = gql`
+  mutation updateCounter ( $minutes: Float!, $seconds: Float!) {
+    timerUpdateCounter( minutes:$minutes, seconds:$seconds) @client
+  }
+`
 
-// const getTimerFromLocalCache = gql`
-//   query getTimerFromCache {
-//     timer @client {
-//       type
-//       duration
-//       minutes
-//       seconds
-//       active
-//     }
-//   }
-// `
+const getTimerFromLocalCache = gql`
+  query getTimerFromCache {
+    timer @client {
+      type
+      duration
+      minutes
+      seconds
+      active
+    }
+  }
+`
 
 const Timer = compose (
   graphql(getTimerFromRemoteSource, { name: 'getTimerFromRemoteSource' }),
-  //graphql(saveTimerInLocalCache, { name: 'saveTimerInLocalCache' }),
-  //graphql(getTimerFromLocalCache, { name: 'getTimerFromLocalCache' }),
-  //graphql(updateCounter, { name: 'updateCounter' })
+  graphql(saveTimerInLocalCache, { name: 'saveTimerInLocalCache' }),
+  graphql(getTimerFromLocalCache, { name: 'getTimerFromLocalCache' }),
+  graphql(updateCounter, { name: 'updateCounter' })
 )(TimerContainer)
 
 export default Timer

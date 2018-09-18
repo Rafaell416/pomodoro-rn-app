@@ -34,6 +34,11 @@ export const resolvers = {
       const data = { timer: { __typename: 'Timer', type } }
       cache.writeData({ data })
       return null
+    },
+    timerUpdateCounter: (_, { minutes, seconds }, { cache }) => {
+      const data = { timer: { __typename: 'Timer', minutes, seconds } }
+      cache.writeData({ data })
+      return null
     }
   },
 }
