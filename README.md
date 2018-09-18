@@ -15,7 +15,7 @@ Then you just have to open the next link on your browser and user the expo clien
 If you're using an Iphone, the same as android for you, make sure you have installed the expo client app, you can do it [here](https://itunes.apple.com/us/app/expo-client/id982107779?mt=8)
 
 Then you just have to open the app and go to explore tab, there just search for Pomodoro and click on the app to open it.
-[pomodoro](assets/screenshot.png)
+![alt pomodoro](assets/screenshot.png)
 
 
 ## For Devs
