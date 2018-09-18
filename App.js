@@ -8,15 +8,24 @@ import {
 import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
 import { setContext } from 'apollo-link-context'
-import { ApolloLink } from 'apollo-link'
+import { ApolloLink, split } from 'apollo-link'
 import { withClientState } from 'apollo-link-state'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from 'react-apollo'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
 
 import { defaults, resolvers } from './src/Resolvers'
 import AppNavigation from './src/Navigation'
 
 const httpLink = createHttpLink({ uri: 'http://192.168.56.1:3000/graphql' })
+
+const wsLink = new WebSocketLink({
+  uri: `ws://192.168.56.1:3000/graphql`,
+  options: {
+    reconnect: true
+  }
+})
 
 const authLink = setContext( async (_, { headers }) => {
   const token = await SecureStore.getItemAsync('access-token')
@@ -28,12 +37,25 @@ const authLink = setContext( async (_, { headers }) => {
   }
 })
 
+const terminatingLink = split(
+  ({ query }) => {
+    const { kind, operation } = getMainDefinition(query)
+    return (
+      kind === 'OperationDefinition' && operation === 'subscription'
+    );
+  },
+  wsLink,
+  authLink.concat(httpLink),
+)
+
 const cache = new InMemoryCache()
 
 const stateLink = withClientState({ cache, defaults, resolvers })
 
+const link = ApolloLink.from([stateLink, terminatingLink])
+
 const client = new ApolloClient({
-  link: ApolloLink.from([stateLink, authLink.concat(httpLink)]),
+  link,
   cache
 })
 

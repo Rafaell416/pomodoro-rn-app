@@ -4,11 +4,19 @@ import {
   Text,
   StyleSheet
 } from 'react-native'
-import { graphql, compose } from 'react-apollo'
+import { graphql, compose, Subscription } from 'react-apollo'
 import gql from 'graphql-tag'
 import { SecureStore } from 'expo'
 
 import TouchableIcon from '../Components/TouchableIcon'
+
+const timerStatusChangedSubscription = gql`
+  subscription statusChanged {
+    timerStatusChanged {
+      active
+    }
+  }
+`
 
 class PlayPause extends Component {
   constructor(props){
@@ -29,26 +37,50 @@ class PlayPause extends Component {
     }
   }
 
+  componentDidMount(){
+    this.props.getTimerFromLocalCache.subscribeToMore({
+      document: timerStatusChangedSubscription,
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData.data) return prev
+
+        const { active } = subscriptionData.data.timerStatusChanged
+
+        if (active) {
+          this.props.playLocalTimer({ variables: { active } })
+        } else {
+          this.props.pauseLocalTimer({ variables: { active } })
+        }
+      }
+    })
+  }
+
   render () {
     const { active } = this.props.getTimerFromLocalCache.timer
     return (
-      <View style={styles.container}>
-        {
-          active
-            ? <TouchableIcon
-                name="pause"
-                size={60}
-                color="white"
-                actionToExecuteWhenPress={() => this._handlePlayAndPauseButton()}
-              />
-            : <TouchableIcon
-                name="play"
-                size={60}
-                color="white"
-                actionToExecuteWhenPress={() => this._handlePlayAndPauseButton()}
-              />
-        }
-      </View>
+      <Subscription
+        subscription={timerStatusChangedSubscription}
+      >
+        {() => (
+          <View style={styles.container}>
+
+            {
+              active
+                ? <TouchableIcon
+                    name="pause"
+                    size={60}
+                    color="white"
+                    actionToExecuteWhenPress={() => this._handlePlayAndPauseButton()}
+                  />
+                : <TouchableIcon
+                    name="play"
+                    size={60}
+                    color="white"
+                    actionToExecuteWhenPress={() => this._handlePlayAndPauseButton()}
+                  />
+            }
+          </View>
+        )}
+      </Subscription>
     )
   }
 }

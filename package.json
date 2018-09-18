@@ -27,6 +27,8 @@
     "apollo-link-context": "^1.0.9",
     "apollo-link-http": "^1.5.5",
     "apollo-link-state": "^0.4.2",
+    "apollo-link-ws": "^1.0.9",
+    "apollo-utilities": "^1.0.21",
     "expo": "^27.0.1",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.9.2",
@@ -36,7 +38,8 @@
     "react-native": "~0.55.2",
     "react-native-paper": "^2.0.1",
     "react-native-spotlight-input": "^0.0.8",
-    "react-navigation": "^2.14.0"
+    "react-navigation": "^2.14.0",
+    "subscriptions-transport-ws": "^0.9.14"
   },
   "proxy": {
     "/api": {
