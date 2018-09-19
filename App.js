@@ -29,6 +29,7 @@ const wsLink = new WebSocketLink({
 
 const authLink = setContext( async (_, { headers }) => {
   const token = await SecureStore.getItemAsync('access-token')
+  console.log(token)
   return {
     headers: {
       ...headers,
@@ -75,7 +76,10 @@ export default class App extends Component {
     }
   }
 
-  componentWillMount () {
+
+  async componentWillMount () {
+    // await SecureStore.deleteItemAsync('uid')
+    // await SecureStore.deleteItemAsync('access-token')
     console.disableYellowBox = true
   }
 

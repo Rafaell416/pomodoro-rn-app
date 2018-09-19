@@ -37,6 +37,7 @@ class SignupScreen extends Component {
       this.setState({loading: true})
       this.props.mutate({variables: { username, email, password }})
       .then(async ({ data })=> {
+        console.log('signup response data', data)
         this.setState({loading: false})
         await SecureStore.setItemAsync('access-token', data.signup.jwt)
         await SecureStore.setItemAsync('uid', data.signup._id)

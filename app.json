@@ -3,11 +3,12 @@
     "name": "Pomodoro",
     "slug": "pomodoro",
     "sdkVersion": "27.0.0",
+    "orientation": "portrait",
     "privacy": "public",
     "icon": "./assets/app.png",
     "splash": {
       "backgroundColor": "#ffffff",
       "image": "./assets/app.png"
-    }
+    },
   }
 }
