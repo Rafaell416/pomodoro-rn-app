@@ -18,10 +18,10 @@ import { getMainDefinition } from 'apollo-utilities'
 import { defaults, resolvers } from './src/Resolvers'
 import AppNavigation from './src/Navigation'
 
-const httpLink = createHttpLink({ uri: 'https://pomodoro-backend-yownypqxqx.now.sh/graphql' })
+const httpLink = createHttpLink({ uri: 'https://pomodoro-backend-mzibscdekb.now.sh/graphql' })
 
 const wsLink = new WebSocketLink({
-  uri: `ws://pomodoro-backend-yownypqxqx.now.sh/graphql`,
+  uri: `ws://pomodoro-backend-mzibscdekb.now.sh/graphql`,
   options: {
     reconnect: true
   }
